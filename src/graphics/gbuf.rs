@@ -44,4 +44,8 @@ impl GBuf {
     pub fn flush(&mut self) {
         self.buf.fill(self.def_bg);
     }
+
+    pub fn read(&self) -> &Vec<u32> {
+        &self.buf
+    }
 }

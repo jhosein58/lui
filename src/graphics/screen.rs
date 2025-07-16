@@ -25,6 +25,11 @@ impl Screen {
 
     pub fn update(&mut self, buf: &[u32]) {
         let (w, h) = self.size();
+        let expected_len = w * h;
+        if buf.len() != expected_len {
+            panic!("Err: Buffer size mismatch (expected {}, got {}) — skipping update", expected_len, buf.len())
+        }
+
         self.window.update_with_buffer(buf, w, h)
         .expect("Err: Updating buffer failed");
     }
