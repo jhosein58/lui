@@ -48,4 +48,54 @@ impl GBuf {
     pub fn read(&self) -> &Vec<u32> {
         &self.buf
     }
+
+    #[inline(always)]
+    pub fn index(&self, x: usize, y: usize) -> Option<usize> {
+
+        if x >= self.w || y >= self.h {
+
+           return None;
+
+        }
+
+        Some(y * self.w + x)
+    }
+
+    #[inline(always)]
+    pub fn set(&mut self, x: usize, y: usize, c: u32) -> Result<(), ()> {
+
+        if let Some(i) = self.index(x, y) {
+
+            self.buf[i] = c;
+            return Ok(());
+
+        }
+
+        Err(())
+    }
+
+    #[inline(always)]
+    pub fn pixel(&self, x: usize, y: usize) -> Option<u32> {
+
+        if let Some(i) = self.index(x, y) {
+
+            return Some(self.buf[i])
+
+        }
+
+        None
+    }
+
+    #[inline(always)]
+    pub fn merge(&mut self, x: usize, y: usize, buf: &[u32], w: usize, h: usize) -> Result<(), ()> {
+
+        for j in 0..h {
+            for i in 0..w{
+                self.set(x + i, y + j, buf[j * w + i])?;
+            }
+        }
+        
+        Ok(())
+    }
+
 }
