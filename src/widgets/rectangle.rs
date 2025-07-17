@@ -61,13 +61,14 @@ impl Widget for Rectangle {
             Size::Absolute(h) => h
         };
 
-        self.buf.resize_if_needed(new_w, new_h);
+        self.buf.resize(new_w, new_h);
         
         self.dirty.clear();
     }
-    fn draw(&mut self, par_size: (usize, usize)) -> &Vec<u32> {
+    fn draw(&mut self, par_size: (usize, usize)) -> (usize, usize, &Vec<u32>) {
         self.update(par_size);
-        self.buf.read()
+        let (w, h) = self.buf.size();
+        (w, h, self.buf.read())
     }
 
     fn flush(&mut self) {

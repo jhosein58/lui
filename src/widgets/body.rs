@@ -28,13 +28,14 @@ impl<T> Widget for Body<T> where T: Widget {
 
 
         for child in self.children.iter_mut() {
-            let (w, h) = child.size();
-            self.buf.merge(10, 10, child.draw((par_w,par_h)), w, h).unwrap();
+            let buf = child.draw((par_w,par_h));
+            self.buf.merge(10, 10, buf).unwrap();
         }
     }
-    fn draw(&mut self, par_size: (usize, usize)) -> &Vec<u32> {
+    fn draw(&mut self, par_size: (usize, usize)) -> (usize, usize, &Vec<u32>) {
         self.update(par_size);
-        self.buf.read()
+        let (w, h) = self.buf.size();
+        (w,h ,self.buf.read())
     }
 
     fn flush(&mut self) {
