@@ -1,4 +1,4 @@
-use crate::widgets::Widget;
+use crate::{widgets::Widget, Style};
 
 
 pub struct Nil {
@@ -6,8 +6,8 @@ pub struct Nil {
 }
 
 impl Nil {
-    pub fn new() -> Self {
-        Self { buf: vec![] }
+    pub fn new() -> Box<Self> {
+        Box::new(Self { buf: vec![] })
     }
 }
 
@@ -25,5 +25,11 @@ impl Widget for Nil {
     }
     fn is_dirty(&self) -> bool {
         false
+    }
+    fn update_dirty_state(&mut self, _: (usize, usize)) {
+        
+    }
+    fn style(&self) -> Style {
+        Style::new()
     }
 }

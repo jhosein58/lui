@@ -1,9 +1,11 @@
-use crate::Size;
+use crate::{Pos, Size};
 
+#[derive(Clone, Copy)]
 pub struct Style {
     color: Option<u32>,
     width: Option<Size>,
     height: Option<Size>,
+    position: Option<Pos>
 }
 
 impl Style {
@@ -12,7 +14,8 @@ impl Style {
         Self { 
             color: None, 
             width: None, 
-            height: None
+            height: None,
+            position: None
         }
     }
     
@@ -38,5 +41,13 @@ impl Style {
     }
     pub fn get_height(&self) -> Option<Size> {
         self.height
+    }
+
+    pub fn set_position(mut self, p: Pos) -> Self {
+        self.position = Some(p);
+        self
+    }
+    pub fn get_position(&self) -> Option<Pos> {
+        self.position
     }
 }

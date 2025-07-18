@@ -1,3 +1,5 @@
+use crate::Color;
+
 pub struct GBuf{
     buf: Vec<u32>,
     def_bg: u32,
@@ -75,6 +77,18 @@ impl GBuf {
     }
 
     #[inline(always)]
+    pub fn blend(&mut self, x: usize, y: usize, c: u32) -> Result<(), ()> {
+
+        if let Some(i) = self.index(x, y) {
+            self.buf[i] = Color::blend_u32_to_u32(c, self.buf[i]);
+            return Ok(());
+        }
+
+        Err(())
+
+    }
+
+    #[inline(always)]
     pub fn pixel(&self, x: usize, y: usize) -> Option<u32> {
 
         if let Some(i) = self.index(x, y) {
@@ -91,7 +105,7 @@ impl GBuf {
 
         for j in 0..h {
             for i in 0..w{
-                self.set(x + i, y + j, buf[j * w + i])?;
+                self.blend(x + i, y + j, buf[j * w + i])?;
             }
         }
         

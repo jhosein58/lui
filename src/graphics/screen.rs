@@ -12,6 +12,7 @@ impl Screen {
             window: Window::new(name, w, h, WindowOptions {
                 resize: true,
                 ..WindowOptions::default()
+                
             }).expect("Err: Cannot create new screen.")
         }
     }
