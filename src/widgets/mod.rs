@@ -7,6 +7,8 @@ pub mod body;
 pub mod nil;
 pub mod rectangle;
 pub mod container;
+pub mod rawbuf;
+pub mod text;
 
 pub trait Widget {
     fn size(&self) -> (usize, usize);

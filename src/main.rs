@@ -1,20 +1,21 @@
 extern crate lui;
 
-use lui::*;
+
+use lui::{graphics::font::Font, *};
 
 fn main () {
 
+    let font = Font::new();
+
     let mut sc = Screen::new("hello", 300, 300);
     
+    let buf = font.text("click!", 35.0, (255, 0, 0));
     
+    let (w, h) = buf.size();
     let mut buf = Body::new( vec![
         Container::new(vec![
 
-            Rectangle::new(Style::new()
-            .set_color(Color::rgba_to_u32(0, 255, 255, 255))
-            .set_width(Size::Absolute(50))
-            .set_height(Size::Absolute(50))
-            .set_position(Pos::Pos(PosKind::Percentage(0.5), PosKind::Percentage(0.5)))),
+            RawBuf::new(buf.read().clone(), w, h)
       
         ], Style::new()
         .set_color(Color::rgba_to_u32(255, 255, 0, 100))
