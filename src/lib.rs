@@ -8,6 +8,7 @@ pub use graphics::gbuf::GBuf;
 pub use graphics::font::Font;
 
 pub use widgets::Widget;
+pub use widgets::DefStyle;
 pub use widgets::props::style::Style;
 pub use widgets::props::size::Size;
 pub use widgets::props::pos::PosKind;
@@ -19,5 +20,6 @@ pub use widgets::nil::Nil;
 pub use widgets::rectangle::Rectangle;
 pub use widgets::container::Container;
 pub use widgets::rawbuf::RawBuf;
+pub use widgets::text::Text;
 
 pub use monitoring::fps::Fps;

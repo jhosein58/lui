@@ -1,6 +1,8 @@
 
 
-use crate::{widgets::props::dirty::Dirty, GBuf, Pos, PosKind, Size, Style, Widget};
+use std::rc::Rc;
+
+use crate::{widgets::{helpers::default_style::DefaultStyle, props::dirty::Dirty}, DefStyle, GBuf, Pos, PosKind, Size, Style, Widget};
 
 
 pub struct Container {
@@ -11,13 +13,14 @@ pub struct Container {
     dirty: Dirty,
     last_build: Option<(usize, usize)>,
     initialized: bool,
-    style: Style
+    style: Rc<Style>
 }
 
 impl Container {
     
-    pub fn new(children: Vec<Box<dyn Widget>>, style: Style) -> Box<Self> {
+    pub fn new(children: Vec<Box<dyn Widget>>, style: Option<Rc<Style>>) -> Box<Self> {
 
+        let style = DefaultStyle::optional_style::<Self>(style);
         let w = style.get_width().unwrap_or(Size::Relative(1.0));
         let h = style.get_height().unwrap_or(Size::Relative(1.0));
 
@@ -86,7 +89,7 @@ impl Container {
                     biggest_h = 0;          
                 }
 
-                self.buf.merge(current_x, current_y, buf).unwrap();
+                self.buf.merge(current_x, current_y, buf);
 
                 current_x += buf.0;
 
@@ -118,7 +121,7 @@ impl Container {
                     _ => {new_y = 0;}
                 }
 
-                self.buf.merge(new_x, new_y, buf).unwrap();
+                self.buf.merge(new_x, new_y, buf);
 
             }
 
@@ -211,7 +214,13 @@ impl Widget for Container {
         (w, h, self.buf.read())
     }
 
-    fn style(&self) -> Style {
-        self.style
+    fn style(&self) -> Rc<Style> {
+        self.style.clone()
+    }
+}
+
+impl DefStyle for Container {
+    fn default_style() -> Style {
+        Style::new().color(0).width(Size::Relative(1.0)).height(Size::Relative(1.0))
     }
 }

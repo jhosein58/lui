@@ -64,28 +64,19 @@ impl GBuf {
     }
 
     #[inline(always)]
-    pub fn set(&mut self, x: usize, y: usize, c: u32) -> Result<(), ()> {
+    pub fn set(&mut self, x: usize, y: usize, c: u32) {
 
         if let Some(i) = self.index(x, y) {
-
             self.buf[i] = c;
-            return Ok(());
-
         }
-
-        Err(())
     }
 
     #[inline(always)]
-    pub fn blend(&mut self, x: usize, y: usize, c: u32) -> Result<(), ()> {
+    pub fn blend(&mut self, x: usize, y: usize, c: u32) {
 
         if let Some(i) = self.index(x, y) {
             self.buf[i] = Color::blend_u32_to_u32(c, self.buf[i]);
-            return Ok(());
         }
-
-        Err(())
-
     }
 
     #[inline(always)]
@@ -101,15 +92,13 @@ impl GBuf {
     }
 
     #[inline(always)]
-    pub fn merge(&mut self, x: usize, y: usize, (w,h, buf): (usize, usize, &Vec<u32>)) -> Result<(), ()> {
+    pub fn merge(&mut self, x: usize, y: usize, (w,h, buf): (usize, usize, &Vec<u32>)) {
 
         for j in 0..h {
             for i in 0..w{
-                self.blend(x + i, y + j, buf[j * w + i])?;
+                self.blend(x + i, y + j, buf[j * w + i]);
             }
         }
-        
-        Ok(())
     }
 
 }

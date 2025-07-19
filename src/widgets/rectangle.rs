@@ -1,4 +1,6 @@
-use crate::{widgets::{props::{dirty::Dirty, style::Style}, Widget}, GBuf, Size};
+use std::rc::Rc;
+
+use crate::{widgets::{helpers::default_style::DefaultStyle, props::{dirty::Dirty, style::Style}, Widget}, DefStyle, GBuf, Size};
 
 
 pub struct Rectangle {
@@ -8,34 +10,24 @@ pub struct Rectangle {
     h: Size,
     last_build: Option<(usize, usize)>,
     initialized: bool,
-    style: Style
+    style: Rc<Style>
 }
 
 impl Rectangle {
     
-    pub fn new(style: Style) -> Box<Self> {
+    pub fn new(style: Option<Rc<Style>>) -> Box<Self> {
+
+        let style = DefaultStyle::optional_style::<Self>(style);
 
         let w = style.get_width().unwrap_or(Size::Absolute(0));
         let h = style.get_height().unwrap_or(Size::Absolute(0));
 
-        let (buf_w, buf_h);
 
-        if let Size::Absolute(w_val) = w {
-            buf_w = w_val;
-        }else {
-            buf_w = 0;
-        }
-        
-        if let Size::Absolute(h_val) = h {
-            buf_h = h_val;
-        }else {
-            buf_h = 0;
-        }
     
         Box::new(Self { 
             buf: GBuf::new(
-            buf_w, 
-            buf_h, 
+            0, 
+            0, 
             style.get_color().unwrap_or(0),
         ) , 
         dirty: Dirty { is_dirty: true },
@@ -138,7 +130,14 @@ impl Widget for Rectangle {
        }
     }
 
-    fn style(&self) -> Style {
-        self.style
+    fn style(&self) -> Rc<Style> {
+        self.style.clone()
+    }
+
+}
+
+impl DefStyle for Rectangle {
+    fn default_style() -> Style {
+        Style::new().color(0).width(Size::Absolute(0)).height(Size::Absolute(0))
     }
 }

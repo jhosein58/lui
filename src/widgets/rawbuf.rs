@@ -1,3 +1,5 @@
+use std::rc::Rc;
+
 use crate::{ Style, Widget};
 
 
@@ -25,8 +27,8 @@ impl Widget for RawBuf {
     fn is_dirty(&self) -> bool {
         false
     }
-    fn style(&self) -> crate::Style {
-        Style::new()
+    fn style(&self) -> Rc<Style> {
+        Style::new().get().unwrap()
     }
     fn update_dirty_state(&mut self, _: (usize, usize)) {
         

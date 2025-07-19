@@ -1,3 +1,5 @@
+use std::rc::Rc;
+
 use crate::{widgets::Widget, Style};
 
 
@@ -29,7 +31,7 @@ impl Widget for Nil {
     fn update_dirty_state(&mut self, _: (usize, usize)) {
         
     }
-    fn style(&self) -> Style {
-        Style::new()
+    fn style(&self) -> Rc<Style> {
+        Style::empty().unwrap()
     }
 }

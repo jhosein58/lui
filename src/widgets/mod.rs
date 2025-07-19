@@ -1,7 +1,10 @@
+use std::rc::Rc;
+
 use crate::Style;
 
 
 pub mod props;
+pub mod helpers;
 
 pub mod body;
 pub mod nil;
@@ -17,5 +20,9 @@ pub trait Widget {
     fn flush(&mut self);
     fn is_dirty(&self) -> bool;
     fn update_dirty_state(&mut self, par_size: (usize, usize));
-    fn style(&self) -> Style;
+    fn style(&self) -> Rc<Style>;
+}
+
+pub trait DefStyle {
+    fn default_style() -> Style;
 }

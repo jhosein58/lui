@@ -1,34 +1,66 @@
-use crate::{ widgets::props::dirty::Dirty, Color, Font, GBuf, Widget};
+use std::rc::Rc;
+
+use crate::{ widgets::{helpers::default_style::DefaultStyle}, Color, DefStyle, Font, GBuf, Style, Widget};
 
 
-pub struct Text<'a> {
+pub struct Text {
     buf: GBuf,
-    font: &'a Font,
-    dirty: Dirty
+    style: Rc<Style>
 }
 
-impl<'a> Text<'a> {
+impl Text {
     
-    pub fn new(str: &str, size: f32, color: Color, font: &'a Font) -> Box<Self> {
-        let buf = font.text(str, size, (color.0, color.1, color.2));
+    pub fn new(str: &str, style: Option<Rc<Style>>) -> Box<Self> {
+
+        let style = DefaultStyle::optional_style::<Self>(style);
+
+        let binding = Font::default();
+        let font = style.get_font().unwrap_or(&binding);
+        let size = style.get_font_size().unwrap_or(12.0);
+        let [r,g,b,_] = Color::u32_to_rgba(
+            style.get_color().unwrap_or(0)
+        );
+
+        let buf = font.text(str, size, (r, g, b));
 
         Box::new(Self {
             buf,
-            font,
-            dirty: Dirty { is_dirty: false }
+            style
         })
     }
 
 }
 
-impl<'a> Widget for Text<'a> {
+impl Widget for Text {
     
     fn size(&self) -> (usize, usize) {
         self.buf.size()
     }
 
     fn flush(&mut self) {
-        self.buf.flush();
-        self.bu
+
+    }
+
+    fn is_dirty(&self) -> bool {
+        false
+    }
+    fn update_dirty_state(&mut self, _: (usize, usize)) {
+        
+    }
+    fn update(&mut self, _: (usize, usize)) {
+        
+    }
+    fn style(&self) -> Rc<Style> {
+        self.style.clone()
+    }
+    fn draw(&mut self, _: (usize, usize)) -> (usize, usize, &Vec<u32>) {
+        let (w, h) = self.buf.size();
+        (w, h, self.buf.read())
+    }
+}
+
+impl DefStyle for Text {
+    fn default_style() -> Style {
+        Style::new().font(Font::default()).font_size(12.0).color(Color::rgba_to_u32(0, 0, 0, 255))
     }
 }

@@ -9,7 +9,7 @@ pub struct Font {
 
 impl Font {
     
-    pub fn new() -> Self {
+    pub fn default() -> Self {
         const FONT_DATA: &[u8] = include_bytes!("../../src/fonts/def.ttf");
         let font = F::from_bytes(FONT_DATA, fontdue::FontSettings::default()).unwrap();
 
@@ -48,7 +48,7 @@ impl Font {
 
         let mut current_x = 0;
         for (cw, ch, c_buf) in chars.iter() {
-            buf.merge(current_x, 0,(cw.to_owned(), ch.to_owned(), c_buf)).unwrap();
+            buf.merge(current_x, 0,(cw.to_owned(), ch.to_owned(), c_buf));
             current_x += cw;
         }
         buf

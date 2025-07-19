@@ -1,22 +1,29 @@
 
-use crate::{widgets::{props::dirty::Dirty, Widget}, Color, GBuf, Screen, Style};
+use std::rc::Rc;
+
+use crate::{widgets::{helpers::default_style::DefaultStyle, props::dirty::Dirty, DefStyle, Widget}, Color, GBuf, Screen, Style};
 
 
 pub struct Body {
     buf: GBuf,
     children: Vec<Box<dyn Widget>>,
     dirty: Dirty,
-    last_build: Option<(usize, usize)>
+    last_build: Option<(usize, usize)>,
+    style: Rc<Style>
 } 
 
 impl Body {
 
-    pub fn new(children: Vec<Box<dyn Widget>>) -> Self {
+    pub fn new(children: Vec<Box<dyn Widget>>, style: Option<Rc<Style>>) -> Self {
+
+        let accepted_style = DefaultStyle::optional_style::<Self>(style);
+
         Self { 
-            buf: GBuf::new(0, 0, Color::rgba_to_u32(255, 255, 255, 255)),
+            buf: GBuf::new(0, 0, accepted_style.most_have_color(0xFFFFFFFF)),
             children,
             dirty: Dirty { is_dirty: true },
-            last_build: None
+            last_build: None,
+            style: accepted_style
         }
     
     }
@@ -25,6 +32,7 @@ impl Body {
         let (_,_, buf) = self.draw(sc.size());
         sc.update(buf);
     }
+
 }
 
 impl Widget for Body {
@@ -58,7 +66,7 @@ impl Widget for Body {
                 }
 
 
-                self.buf.merge(current_x, current_y, buf).unwrap();
+                self.buf.merge(current_x, current_y, buf);
 
 
                 current_x += buf.0;
@@ -116,7 +124,14 @@ impl Widget for Body {
         false  
     }
 
-    fn style(&self) -> crate::Style {
-        Style::new()
+    fn style(&self) -> Rc<Style> {
+        self.style.clone()
+    }
+}
+
+impl DefStyle for Body {
+
+    fn default_style() -> Style {
+        Style::new().color(Color::rgba_to_u32(255, 255, 255, 255))
     }
 }
