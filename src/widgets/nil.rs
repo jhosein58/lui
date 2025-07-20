@@ -14,6 +14,9 @@ impl Nil {
 }
 
 impl Widget for Nil {
+    fn force_build(&mut self, _: (usize, usize)) {
+        
+    }
     fn size(&self) -> (usize, usize) {
         (0, 0)
     }

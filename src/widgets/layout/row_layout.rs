@@ -1,20 +1,20 @@
 
 use crate::{Layout, Widget};
 
-pub struct ColumnLayout {
+pub struct RowLayout {
     pub spacing: usize,
 }
 
-impl Layout for ColumnLayout {
+impl Layout for RowLayout {
     fn compute_positions(&self, children: &[Box<dyn Widget>], _: (usize, usize)) -> Vec<(usize, usize)> {
 
         let mut positions = Vec::new();
-        let mut y = 0;
+        let mut x = 0;
 
         for child in children {
-            let (_, height) = child.size(); 
-            positions.push((0, y)); 
-            y += height + self.spacing;
+            let (w, _) = child.size();
+            positions.push((x, 0));
+            x += w + self.spacing;
         }
 
         positions

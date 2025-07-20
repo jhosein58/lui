@@ -2,7 +2,7 @@
 
 use std::rc::Rc;
 
-use crate::{widgets::{helpers::default_style::DefaultStyle, props::dirty::Dirty}, BorderRadius, DefStyle, GBuf, Pos, PosKind, Size, Style, Widget};
+use crate::{column_layout::ColumnLayout, widgets::{helpers::default_style::DefaultStyle, props::dirty::Dirty}, wrapper::Wrapper, BorderRadius, DefStyle, GBuf, Size, Style, Widget};
 
 
 pub struct Container {
@@ -54,6 +54,19 @@ impl Container {
         })
     }
 
+    fn init_build_if_need(&mut self, par_size: (usize, usize)) {
+
+        if !self.initialized {
+            self.force_build(par_size);
+            self.initialized = true;
+        }
+
+    }
+
+}
+
+impl Widget for Container {
+
     fn force_build(&mut self, par_size: (usize, usize)) {
 
         
@@ -72,80 +85,21 @@ impl Container {
         self.buf.resize_if_needed(new_w, new_h);
         self.flush();
 
-        //////////////////////////////////////////////
+
         
-            let size = self.size();
+        let mut wrapper = Wrapper {
+                layout: ColumnLayout {
+                    spacing: 5
+                },
+                children: &mut self.children
+            };
 
-            let mut biggest_h = 0;
-            let mut current_x = 0;
-            let mut current_y = 0;
+        wrapper.render(&mut self.buf);
 
-            for child in self.children.iter_mut().filter(|c|
-                 { 
-                    if let Pos::Default = c.style().get_position().unwrap_or(Pos::Default) {true} else {false} 
-                }) {
-
-                let buf = child.draw(size);
-
-                if current_x + buf.1 > size.1 {
-                    current_x = 0;
-                    current_y += biggest_h;
-                    biggest_h = 0;          
-                }
-
-                self.buf.merge(current_x, current_y, buf);
-
-                current_x += buf.1;
-
-                if buf.1 > biggest_h {
-                    biggest_h = buf.1;
-                }
-            }
-
-            for child in self.children.iter_mut().filter(|c|
-                 { 
-                    if let Pos::Default = c.style().get_position().unwrap_or(Pos::Default) {false} else {true} 
-            }) {
-
-                let child_style =  child.style().get_position().unwrap();
-                let buf = child.draw(size);
-
-                let new_x;
-                let new_y;
-
-                match child_style {
-                    Pos::Pos(PosKind::Relative(x), _) => {new_x = x},
-                    Pos::Pos(PosKind::Percentage(x), _) => {new_x = (x * size.0 as f32) as usize},
-                    _ => {new_x = 0;}
-                }
-
-                match child_style {
-                    Pos::Pos(_, PosKind::Relative(y)) => {new_y = y},
-                    Pos::Pos(_, PosKind::Percentage(y)) => {new_y = (y * size.1 as f32) as usize},
-                    _ => {new_y = 0;}
-                }
-
-                self.buf.merge(new_x, new_y, buf);
-
-            }
-
-        /////////////////////////////////////////////
         self.buf.process(BorderRadius { radius: self.br });
         self.dirty.clear();
         self.last_build = Some((new_w, new_h));
     }
-
-    fn init_build_if_need(&mut self, par_size: (usize, usize)) {
-
-        if !self.initialized {
-            self.force_build(par_size);
-            self.initialized = true;
-        }
-
-    }
-}
-
-impl Widget for Container {
 
     fn size(&self) -> (usize, usize) {
         self.buf.size()

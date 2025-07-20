@@ -92,14 +92,23 @@ impl GBuf {
     }
 
     #[inline(always)]
-    pub fn merge(&mut self, x: usize, y: usize, (buf, w,h ): (&Vec<u32>, usize, usize)) {
+    pub fn merge(&mut self, x: usize, y: usize, (buf, w, h): (&Vec<u32>, usize, usize)) {
 
-        for j in 0..h {
-            for i in 0..w{
-                self.blend(x + i, y + j, buf[j * w + i]);
+        let write_w = w.min(self.w.saturating_sub(x));
+        let write_h = h.min(self.h.saturating_sub(y));
+
+        if write_w == 0 || write_h == 0 {
+            return; 
+        }
+
+        for j in 0..write_h {
+            let row_start = j * w; 
+            for i in 0..write_w {
+                self.blend(x + i, y + j, buf[row_start + i]);
             }
         }
     }
+
 
     pub fn process<T>(&mut self, processor: T) 
     where T: Processor 

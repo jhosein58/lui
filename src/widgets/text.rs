@@ -32,6 +32,10 @@ impl Text {
 }
 
 impl Widget for Text {
+
+    fn force_build(&mut self, _: (usize, usize)) {
+        
+    }
     
     fn size(&self) -> (usize, usize) {
         self.buf.size()
