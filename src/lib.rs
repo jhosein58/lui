@@ -8,6 +8,7 @@ pub use graphics::gbuf::GBuf;
 pub use graphics::font::Font;
 
 pub use graphics::processors::Processor;
+pub use graphics::processors::border_radius::BorderRadius;
 
 pub use widgets::Widget;
 pub use widgets::DefStyle;
@@ -23,5 +24,6 @@ pub use widgets::rectangle::Rectangle;
 pub use widgets::container::Container;
 pub use widgets::rawbuf::RawBuf;
 pub use widgets::text::Text;
+pub use widgets::button::Button;
 
 pub use monitoring::fps::Fps;

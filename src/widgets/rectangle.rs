@@ -1,6 +1,6 @@
 use std::rc::Rc;
 
-use crate::{widgets::{helpers::default_style::DefaultStyle, props::{dirty::Dirty, style::Style}, Widget}, DefStyle, GBuf, Size};
+use crate::{widgets::{helpers::default_style::DefaultStyle, props::{dirty::Dirty, style::Style}, Widget}, BorderRadius, DefStyle, GBuf, Size};
 
 
 pub struct Rectangle {
@@ -8,6 +8,7 @@ pub struct Rectangle {
     dirty: Dirty,
     w: Size,
     h: Size,
+    br: usize,
     last_build: Option<(usize, usize)>,
     initialized: bool,
     style: Rc<Style>
@@ -21,7 +22,7 @@ impl Rectangle {
 
         let w = style.get_width().unwrap_or(Size::Absolute(0));
         let h = style.get_height().unwrap_or(Size::Absolute(0));
-
+        let br = style.get_border_radius().unwrap_or(0);
 
     
         Box::new(Self { 
@@ -33,6 +34,7 @@ impl Rectangle {
         dirty: Dirty { is_dirty: true },
         w,
         h,
+        br,
         last_build: None,
         initialized: false,
         style
@@ -56,6 +58,7 @@ impl Rectangle {
         };
 
         self.buf.resize(new_w, new_h);
+        self.buf.process(BorderRadius{ radius: self.br });
         self.dirty.clear();
         self.last_build = Some((new_w, new_h));
     }
@@ -138,6 +141,6 @@ impl Widget for Rectangle {
 
 impl DefStyle for Rectangle {
     fn default_style() -> Style {
-        Style::new().color(0).width(Size::Absolute(0)).height(Size::Absolute(0))
+        Style::new().color(0).width(Size::Absolute(0)).height(Size::Absolute(0)).border_radius(0)
     }
 }

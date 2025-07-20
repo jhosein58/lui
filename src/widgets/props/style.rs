@@ -4,28 +4,32 @@ use std::{rc::Rc};
 use crate::{DirVal, Font, Pos, Size};
 
 pub struct Style {
-    pub color:     Option<u32>,
-    pub width:     Option<Size>,
-    pub height:    Option<Size>,
-    pub position:  Option<Pos>,
-    pub border:    Option<(u32, usize)>,
-    pub margin:    Option<DirVal<usize>>,
-    pub font_size: Option<f32>,
-    pub font:      Option<Font>,
+    pub color:         Option<u32>,
+    pub background:    Option<u32>,
+    pub width:         Option<Size>,
+    pub height:        Option<Size>,
+    pub position:      Option<Pos>,
+    pub border:        Option<(u32, usize)>,
+    pub border_radius: Option<usize>,
+    pub margin:        Option<DirVal<usize>>,
+    pub font_size:     Option<f32>,
+    pub font:          Option<Font>,
 }
 
 impl Style {
 
     pub fn new() -> Self {
         Self { 
-                color:     None, 
-                width:     None, 
-                height:    None,
-                position:  None,
-                border:    None,
-                margin:    None,
-                font_size: None,
-                font:      None
+                color:         None, 
+                background:    None,
+                width:         None, 
+                height:        None,
+                position:      None,
+                border:        None,
+                border_radius: None,
+                margin:        None,
+                font_size:     None,
+                font:          None
             }
     }
 
@@ -44,6 +48,15 @@ impl Style {
     pub fn get_color(&self) -> Option<u32> {
         self.color
     }
+
+    pub fn background(mut self, c: u32) -> Self {
+        self.background = Some(c);
+        self
+    }
+    pub fn get_background(&self) -> Option<u32> {
+        self.background
+    }
+
     pub fn most_have_color(&self, default: u32) -> u32 {
         if let Some(c) = self.color {
             return c;
@@ -81,6 +94,14 @@ impl Style {
     }
     pub fn get_border(&self) -> Option<(u32, usize)> {
         self.border
+    }
+
+    pub fn border_radius(mut self, b: usize) -> Self {
+        self.border_radius = Some(b);
+        self
+    }
+    pub fn get_border_radius(&self) -> Option<usize> {
+        self.border_radius
     }
 
     pub fn margin(mut self, top: usize, bottom: usize, left: usize, right: usize) -> Self {

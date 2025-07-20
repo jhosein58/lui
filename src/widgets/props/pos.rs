@@ -1,12 +1,11 @@
-#[derive(Clone, Copy)]
-pub enum PosKind {
-    Relative(usize),
-    Percentage(f32)
+
+
+pub enum PosVal {
+    Absolute(usize),           
+    Expr(Box<dyn Fn(usize, usize, usize, usize) -> usize>),
 }
 
-#[derive(Clone, Copy)]
-pub enum Pos {
-    Pos(PosKind, PosKind),
-    Default
-}
-
+pub enum Position {
+    Absolute(PosVal, PosVal), 
+    Default,   
+}              

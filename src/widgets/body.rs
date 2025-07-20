@@ -1,7 +1,7 @@
 
 use std::rc::Rc;
 
-use crate::{graphics::processors::border_radius::BorderRadius, widgets::{helpers::default_style::DefaultStyle, props::dirty::Dirty, DefStyle, Widget}, Color, GBuf, Processor, Screen, Style};
+use crate::{widgets::{helpers::default_style::DefaultStyle, props::dirty::Dirty, DefStyle, Widget}, Color, GBuf, Screen, Style};
 
 
 pub struct Body {
@@ -66,7 +66,6 @@ impl Widget for Body {
                 }
 
                 self.buf.merge(current_x, current_y, buf);
-
 
                 current_x += buf.1;
 

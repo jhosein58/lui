@@ -6,7 +6,7 @@ pub struct BorderRadius {
 }
 
 impl Processor for BorderRadius {
-    fn process(&self, mut buffer: Vec<u32>, width: usize, height: usize) -> (Vec<u32>, usize, usize) {
+    fn process(&self, buffer: &mut Vec<u32>, width: usize, height: usize) {
         let radius = self.radius;
         for y in 0..height {
             for x in 0..width {
@@ -45,8 +45,6 @@ impl Processor for BorderRadius {
                 }
             }       
         }       
-
-        (buffer, width, height)
 
     }
 }

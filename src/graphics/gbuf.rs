@@ -1,4 +1,4 @@
-use crate::Color;
+use crate::{Color, Processor};
 
 pub struct GBuf{
     buf: Vec<u32>,
@@ -99,6 +99,12 @@ impl GBuf {
                 self.blend(x + i, y + j, buf[j * w + i]);
             }
         }
+    }
+
+    pub fn process<T>(&mut self, processor: T) 
+    where T: Processor 
+    {
+        processor.process(&mut self.buf, self.w, self.h);
     }
 
 }

@@ -2,7 +2,7 @@
 
 use std::rc::Rc;
 
-use crate::{widgets::{helpers::default_style::DefaultStyle, props::dirty::Dirty}, DefStyle, GBuf, Pos, PosKind, Size, Style, Widget};
+use crate::{widgets::{helpers::default_style::DefaultStyle, props::dirty::Dirty}, BorderRadius, DefStyle, GBuf, Pos, PosKind, Size, Style, Widget};
 
 
 pub struct Container {
@@ -10,6 +10,7 @@ pub struct Container {
     children: Vec<Box<dyn Widget>>,
     w: Size,
     h: Size,
+    br: usize,
     dirty: Dirty,
     last_build: Option<(usize, usize)>,
     initialized: bool,
@@ -21,8 +22,10 @@ impl Container {
     pub fn new(children: Vec<Box<dyn Widget>>, style: Option<Rc<Style>>) -> Box<Self> {
 
         let style = DefaultStyle::optional_style::<Self>(style);
+
         let w = style.get_width().unwrap_or(Size::Relative(1.0));
         let h = style.get_height().unwrap_or(Size::Relative(1.0));
+        let br = style.get_border_radius().unwrap_or(0);
 
         let (buf_w, buf_h);
 
@@ -44,6 +47,7 @@ impl Container {
             dirty: Dirty { is_dirty: true },
             w,
             h,
+            br,
             last_build: None,
             initialized: false,
             style
@@ -126,6 +130,7 @@ impl Container {
             }
 
         /////////////////////////////////////////////
+        self.buf.process(BorderRadius { radius: self.br });
         self.dirty.clear();
         self.last_build = Some((new_w, new_h));
     }
@@ -221,6 +226,6 @@ impl Widget for Container {
 
 impl DefStyle for Container {
     fn default_style() -> Style {
-        Style::new().color(0).width(Size::Relative(1.0)).height(Size::Relative(1.0))
+        Style::new().color(0).width(Size::Relative(1.0)).height(Size::Relative(1.0)).border_radius(0)
     }
 }

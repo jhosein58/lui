@@ -5,6 +5,7 @@ use crate::Style;
 
 pub mod props;
 pub mod helpers;
+pub mod layout;
 
 pub mod body;
 pub mod nil;
@@ -12,6 +13,7 @@ pub mod rectangle;
 pub mod container;
 pub mod rawbuf;
 pub mod text;
+pub mod button;
 
 pub trait Widget {
     fn size(&self) -> (usize, usize);
