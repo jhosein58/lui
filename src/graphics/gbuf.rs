@@ -92,7 +92,7 @@ impl GBuf {
     }
 
     #[inline(always)]
-    pub fn merge(&mut self, x: usize, y: usize, (w,h, buf): (usize, usize, &Vec<u32>)) {
+    pub fn merge(&mut self, x: usize, y: usize, (buf, w,h ): (&Vec<u32>, usize, usize)) {
 
         for j in 0..h {
             for i in 0..w{

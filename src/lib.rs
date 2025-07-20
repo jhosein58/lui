@@ -7,6 +7,8 @@ pub use graphics::color::Color;
 pub use graphics::gbuf::GBuf;
 pub use graphics::font::Font;
 
+pub use graphics::processors::Processor;
+
 pub use widgets::Widget;
 pub use widgets::DefStyle;
 pub use widgets::props::style::Style;

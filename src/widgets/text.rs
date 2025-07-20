@@ -53,9 +53,9 @@ impl Widget for Text {
     fn style(&self) -> Rc<Style> {
         self.style.clone()
     }
-    fn draw(&mut self, _: (usize, usize)) -> (usize, usize, &Vec<u32>) {
+    fn draw(&mut self, _: (usize, usize)) -> (&Vec<u32>, usize, usize) {
         let (w, h) = self.buf.size();
-        (w, h, self.buf.read())
+        (self.buf.read(), w, h)
     }
 }
 

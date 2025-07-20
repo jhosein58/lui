@@ -89,11 +89,11 @@ impl Widget for Rectangle {
 
 
     
-    fn draw(&mut self, par_size: (usize, usize)) -> (usize, usize, &Vec<u32>) {
+    fn draw(&mut self, par_size: (usize, usize)) -> (&Vec<u32>, usize, usize) {
         
         self.update(par_size);
         let (w, h) = self.buf.size();
-        (w, h, self.buf.read())
+        (self.buf.read(), w, h)
     }
 
     fn flush(&mut self) {

@@ -36,8 +36,8 @@ impl Widget for RawBuf {
     fn update(&mut self, _: (usize, usize)) {
         
     }
-    fn draw(&mut self, _: (usize, usize)) -> (usize, usize, &Vec<u32>) {
+    fn draw(&mut self, _: (usize, usize)) -> (&Vec<u32>, usize, usize) {
         let (w, h) = self.size();
-        (w, h, &self.buf)
+        (&self.buf, w, h)
     }
 }

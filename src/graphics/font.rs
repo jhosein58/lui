@@ -48,7 +48,7 @@ impl Font {
 
         let mut current_x = 0;
         for (cw, ch, c_buf) in chars.iter() {
-            buf.merge(current_x, 0,(cw.to_owned(), ch.to_owned(), c_buf));
+            buf.merge(current_x, 0,(c_buf, cw.to_owned(), ch.to_owned()));
             current_x += cw;
         }
         buf

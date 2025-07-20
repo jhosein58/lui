@@ -83,7 +83,7 @@ impl Container {
 
                 let buf = child.draw(size);
 
-                if current_x + buf.0 > size.0 {
+                if current_x + buf.1 > size.1 {
                     current_x = 0;
                     current_y += biggest_h;
                     biggest_h = 0;          
@@ -91,7 +91,7 @@ impl Container {
 
                 self.buf.merge(current_x, current_y, buf);
 
-                current_x += buf.0;
+                current_x += buf.1;
 
                 if buf.1 > biggest_h {
                     biggest_h = buf.1;
@@ -207,11 +207,11 @@ impl Widget for Container {
     }
 
 
-    fn draw(&mut self, par_size: (usize, usize)) -> (usize, usize, &Vec<u32>) {
+    fn draw(&mut self, par_size: (usize, usize)) -> (&Vec<u32>, usize, usize) {
         
         self.update(par_size);
         let (w, h) = self.buf.size();
-        (w, h, self.buf.read())
+        (self.buf.read(), w, h)
     }
 
     fn style(&self) -> Rc<Style> {

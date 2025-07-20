@@ -1,7 +1,7 @@
 
 use std::rc::Rc;
 
-use crate::{widgets::{helpers::default_style::DefaultStyle, props::dirty::Dirty, DefStyle, Widget}, Color, GBuf, Screen, Style};
+use crate::{graphics::processors::border_radius::BorderRadius, widgets::{helpers::default_style::DefaultStyle, props::dirty::Dirty, DefStyle, Widget}, Color, GBuf, Processor, Screen, Style};
 
 
 pub struct Body {
@@ -29,7 +29,7 @@ impl Body {
     }
 
     pub fn display(&mut self, sc: &mut Screen) {
-        let (_,_, buf) = self.draw(sc.size());
+        let (buf, _,_ ) = self.draw(sc.size());
         sc.update(buf);
     }
 
@@ -59,17 +59,16 @@ impl Widget for Body {
                 let buf = child.draw(par_size);
 
 
-                if current_x + buf.0 > par_size.0 {
+                if current_x + buf.1 > par_size.1 {
                     current_x = 0;
                     current_y += biggest_h;
                     biggest_h = 0;          
                 }
 
-
                 self.buf.merge(current_x, current_y, buf);
 
 
-                current_x += buf.0;
+                current_x += buf.1;
 
                 if buf.1 > biggest_h {
                     biggest_h = buf.1;
@@ -82,12 +81,12 @@ impl Widget for Body {
 
     }
 
-    fn draw(&mut self, par_size: (usize, usize)) -> (usize, usize, &Vec<u32>) {
+    fn draw(&mut self, par_size: (usize, usize)) -> (&Vec<u32>, usize, usize) {
 
         self.update(par_size);
 
         let (w, h) = self.buf.size();
-        (w,h ,self.buf.read())
+        (self.buf.read(), w,h)
 
     }
 
