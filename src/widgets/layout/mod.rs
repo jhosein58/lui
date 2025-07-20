@@ -1,7 +1,9 @@
-use std::rc::Rc;
 
-use crate::{Pos, Widget};
+use crate::{Widget};
+
+pub mod column_layout;
+pub mod wrapper;
 
 pub trait Layout {
-    fn compute_positions(&self, children: &[Rc<dyn Widget>], area: (usize, usize)) -> Vec<Pos>;
+    fn compute_positions(&self, children: &[Box<dyn Widget>], area: (usize, usize)) -> Vec<(usize, usize)>;
 }
