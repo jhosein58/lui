@@ -1,7 +1,7 @@
 
 use std::rc::Rc;
 
-use crate::{widgets::{helpers::default_style::DefaultStyle, props::dirty::Dirty, DefStyle, Widget}, Color, GBuf, Screen, Style};
+use crate::{column_layout::ColumnLayout, widgets::{helpers::default_style::DefaultStyle, props::dirty::Dirty, DefStyle, Widget}, wrapper::Wrapper, Color, GBuf, Screen, Style};
 
 
 pub struct Body {
@@ -37,6 +37,24 @@ impl Body {
 
 impl Widget for Body {
 
+    fn force_build(&mut self, par_size: (usize, usize)) {
+            self.buf.resize_if_needed(par_size.0, par_size.1);
+            self.flush();
+
+            let mut wrapper = Wrapper {
+                layout: ColumnLayout {
+                    spacing: 5
+                },
+                children: &mut self.children
+            };
+
+            wrapper.render(&mut self.buf);
+
+            self.dirty.clear();
+            self.last_build = Some(par_size);
+
+    }
+
     fn size(&self) -> (usize, usize) {
         self.buf.size()
     }
@@ -46,36 +64,7 @@ impl Widget for Body {
         self.update_dirty_state(par_size);
 
         if self.is_dirty() {
-
-            
-            self.buf.resize_if_needed(par_size.0, par_size.1);
-            self.flush();
-
-            let mut biggest_h = 0;
-            let mut current_x = 0;
-            let mut current_y = 0;
-
-            for child in self.children.iter_mut() {
-                let buf = child.draw(par_size);
-
-
-                if current_x + buf.1 > par_size.1 {
-                    current_x = 0;
-                    current_y += biggest_h;
-                    biggest_h = 0;          
-                }
-
-                self.buf.merge(current_x, current_y, buf);
-
-                current_x += buf.1;
-
-                if buf.1 > biggest_h {
-                    biggest_h = buf.1;
-                }
-            }
-
-            self.dirty.clear();
-            self.last_build = Some(par_size);
+            self.force_build(par_size);
         }
 
     }

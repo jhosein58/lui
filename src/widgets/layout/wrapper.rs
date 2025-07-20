@@ -2,12 +2,12 @@
 use crate::{widgets::layout::Layout, GBuf, Widget};
 
 
-pub struct Wrapper<L: Layout> {
+pub struct Wrapper<'a, L: Layout> {
     pub layout: L,
-    pub children: Vec<Box<dyn Widget>>,
+    pub children: &'a mut Vec<Box<dyn Widget>>,
 }
 
-impl<L: Layout> Wrapper<L> {
+impl<'a, L: Layout> Wrapper<'a, L> {
     pub fn render(&mut self, parent_buffer: &mut GBuf) {
         let parent_size = parent_buffer.size();
         let positions = self.layout.compute_positions(&self.children, parent_size);

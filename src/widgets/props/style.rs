@@ -1,14 +1,14 @@
 
 use std::{rc::Rc};
 
-use crate::{DirVal, Font, Pos, Size};
+use crate::{DirVal, Font, Position, Size};
 
 pub struct Style {
     pub color:         Option<u32>,
     pub background:    Option<u32>,
     pub width:         Option<Size>,
     pub height:        Option<Size>,
-    pub position:      Option<Pos>,
+    pub position:      Option<Position>,
     pub border:        Option<(u32, usize)>,
     pub border_radius: Option<usize>,
     pub margin:        Option<DirVal<usize>>,
@@ -80,12 +80,15 @@ impl Style {
         self.height
     }
 
-    pub fn position(mut self, p: Pos) -> Self {
+    pub fn position(mut self, p: Position) -> Self {
         self.position = Some(p);
         self
     }
-    pub fn get_position(&self) -> Option<Pos> {
-        self.position
+    pub fn get_position(&self) -> Option<&Position> {
+        if let Some(pos) = &self.position {
+            return Some(pos);
+        }
+        None
     }
 
     pub fn border(mut self, b: (u32, usize)) -> Self {

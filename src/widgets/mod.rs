@@ -17,6 +17,7 @@ pub mod button;
 
 pub trait Widget {
     fn size(&self) -> (usize, usize);
+    fn force_build(&mut self, par_size: (usize, usize));
     fn update(&mut self, par_size: (usize, usize));
     fn draw(&mut self, par_size: (usize, usize)) -> (&Vec<u32>, usize, usize);
     fn flush(&mut self);
