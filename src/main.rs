@@ -9,31 +9,10 @@ fn main () {
 
     let mut sc = Screen::new("hello", 300, 300);
 
-    let style = Style::new()
-
-    .color(0xFFFF0000)
-    .width(Size::Absolute(100))
-    .height(Size::Absolute(100))
-
-    .get();
-
-    let style2 = Style::new()
-
-    .color(0x5000FF00)
-    .width(Size::Relative(1.0))
-    .height(Size::Absolute(100))
-    .position(Position::center())
-
-    .get();
-
 
     let mut buf = Body::new( Rc::new(vec![
-        Rectangle::new(style.clone()),
-        Rectangle::new(style.clone()),
-        Rectangle::new(style.clone()),
-        Rectangle::new(style.clone()),
-        Rectangle::new(style.clone()),
-        Rectangle::new(style2.clone()),
+        Button::new("click!", Style::new().position(Position::center()).get()),
+        
     ]), None);
 
 

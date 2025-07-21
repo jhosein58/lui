@@ -1,13 +1,13 @@
 
 
-use std::rc::Rc;
+use std::{cell::RefCell, rc::Rc};
 
-use crate::{ widgets::{helpers::default_style::DefaultStyle, props::dirty::Dirty}, BorderRadius, DefStyle, GBuf, Size, Style, Widget};
+use crate::{ widgets::{helpers::default_style::DefaultStyle, props::dirty::Dirty}, BorderRadius, DefStyle, FallbackLayout, GBuf, PositionLayout, Size, Style, Widget, WrapLayout, Wrapper};
 
 
 pub struct Container {
     buf: GBuf,
-    children: Vec<Box<dyn Widget>>,
+    children: Rc<Vec<Rc<RefCell<dyn Widget>>>>,
     w: Size,
     h: Size,
     br: usize,
@@ -19,7 +19,7 @@ pub struct Container {
 
 impl Container {
     
-    pub fn new(children: Vec<Box<dyn Widget>>, style: Option<Rc<Style>>) -> Box<Self> {
+    pub fn new(children: Rc<Vec<Rc<RefCell<dyn Widget>>>>, style: Option<Rc<Style>>) -> Box<Self> {
 
         let style = DefaultStyle::optional_style::<Self>(style);
 
@@ -85,16 +85,22 @@ impl Widget for Container {
         self.buf.resize_if_needed(new_w, new_h);
         self.flush();
 
+        for child in self.children.iter() {
+            child.borrow_mut().update(par_size);
+        }
 
         
-        // let mut wrapper = Wrapper {
-        //         layout: ColumnLayout {
-        //             spacing: 5
-        //         },
-        //         children: &mut self.children
-        //     };
+        let mut wrapper = Wrapper {
+                layout: FallbackLayout {
+                    default_layout: WrapLayout {
+                        spacing: 10
+                    },
+                    position_layout: PositionLayout { }
+                },
+                children: self.children.clone()
+            };
 
-        // wrapper.render(&mut self.buf);
+        wrapper.render(&mut self.buf);
 
         self.buf.process(BorderRadius { radius: self.br });
         self.dirty.clear();
@@ -116,7 +122,7 @@ impl Widget for Container {
             return true;
         }
         for child in self.children.iter(){
-            if child.is_dirty() {
+            if child.borrow().is_dirty() {
                 return true;
             }
         }
@@ -150,8 +156,8 @@ impl Widget for Container {
            self.dirty.clear();
        }
 
-       for child in self.children.iter_mut() {
-            child.update_dirty_state(par_size);
+       for child in self.children.iter() {
+            child.borrow_mut().update_dirty_state(par_size);
         }
     }
 

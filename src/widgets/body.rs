@@ -29,6 +29,7 @@ impl Body {
     }
 
     pub fn display(&mut self, sc: &mut Screen) {
+        self.tick();
         let (buf, _,_ ) = self.draw(sc.size());
         sc.update(buf);
     }
@@ -120,6 +121,12 @@ impl Widget for Body {
 
     fn style(&self) -> Rc<Style> {
         self.style.clone()
+    }
+
+    fn tick(&mut self) {
+        for child in self.children.iter() {
+            child.borrow_mut().tick();
+        }
     }
 }
 

@@ -1,4 +1,4 @@
-use std::rc::Rc;
+use std::{cell::RefCell, rc::Rc};
 
 use crate::{ widgets::{helpers::default_style::DefaultStyle}, Color, DefStyle, Font, GBuf, Style, Widget};
 
@@ -10,7 +10,7 @@ pub struct Text {
 
 impl Text {
     
-    pub fn new(str: &str, style: Option<Rc<Style>>) -> Box<Self> {
+    pub fn new(str: &str, style: Option<Rc<Style>>) -> Rc<RefCell<Self>> {
 
         let style = DefaultStyle::optional_style::<Self>(style);
 
@@ -23,10 +23,10 @@ impl Text {
 
         let buf = font.text(str, size, (r, g, b));
 
-        Box::new(Self {
+        Rc::new(RefCell::new(Self {
             buf,
             style
-        })
+        }))
     }
 
 }
