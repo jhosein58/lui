@@ -3,11 +3,12 @@ use std::{cell::RefCell, rc::Rc};
 
 use crate::{Widget};
 
-pub mod config;
-pub mod wrapper;
-pub mod column_layout;
-pub mod row_layout;
-
+pub mod support;
+pub mod column;
+pub mod row;
+pub mod position;
+pub mod wrap;
+pub mod fallback;
 
 pub struct PositionEntry {
     pub widget: Rc<RefCell<dyn Widget>>,  

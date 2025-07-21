@@ -1,7 +1,7 @@
 
 use std::{cell::RefCell, rc::Rc};
 
-use crate::{column_layout::ColumnLayout, widgets::{helpers::default_style::DefaultStyle, props::dirty::Dirty, DefStyle, Widget}, wrapper::Wrapper, Color, GBuf, Screen, Style};
+use crate::{widgets::{helpers::default_style::DefaultStyle, props::dirty::Dirty, DefStyle, Widget}, Color, GBuf, PositionLayout, Screen, Style, Wrapper};
 
 
 pub struct Body {
@@ -41,10 +41,12 @@ impl Widget for Body {
             self.buf.resize_if_needed(par_size.0, par_size.1);
             self.flush();
 
+            for child in self.children.iter() {
+                child.borrow_mut().update(par_size);
+            }
+
             let mut wrapper = Wrapper {
-                layout: ColumnLayout {
-                    spacing: 5
-                },
+                layout: PositionLayout {},
                 children: self.children.clone()
             };
 
