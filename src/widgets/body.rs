@@ -1,7 +1,7 @@
 
 use std::{cell::RefCell, rc::Rc};
 
-use crate::{widgets::{helpers::default_style::DefaultStyle, props::dirty::Dirty, DefStyle, Widget}, Color, GBuf, PositionLayout, Screen, Style, Wrapper};
+use crate::{widgets::{helpers::default_style::DefaultStyle, props::dirty::Dirty, DefStyle, Widget}, Color, FallbackLayout, GBuf, PositionLayout, Screen, Style, WrapLayout, Wrapper};
 
 
 pub struct Body {
@@ -46,7 +46,12 @@ impl Widget for Body {
             }
 
             let mut wrapper = Wrapper {
-                layout: PositionLayout {},
+                layout: FallbackLayout {
+                    default_layout: WrapLayout {
+                        spacing: 10
+                    },
+                    position_layout: PositionLayout {  }
+                },
                 children: self.children.clone()
             };
 

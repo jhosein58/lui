@@ -24,6 +24,7 @@ pub trait Widget {
     fn is_dirty(&self) -> bool;
     fn update_dirty_state(&mut self, par_size: (usize, usize));
     fn style(&self) -> Rc<Style>;
+    fn tick(&mut self) { }
 }
 
 pub trait DefStyle {
