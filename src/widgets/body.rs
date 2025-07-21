@@ -1,12 +1,12 @@
 
-use std::rc::Rc;
+use std::{cell::RefCell, rc::Rc};
 
 use crate::{column_layout::ColumnLayout, widgets::{helpers::default_style::DefaultStyle, props::dirty::Dirty, DefStyle, Widget}, wrapper::Wrapper, Color, GBuf, Screen, Style};
 
 
 pub struct Body {
     buf: GBuf,
-    children: Vec<Box<dyn Widget>>,
+    children: Rc<Vec<Rc<RefCell<dyn Widget>>>>,
     dirty: Dirty,
     last_build: Option<(usize, usize)>,
     style: Rc<Style>
@@ -14,7 +14,7 @@ pub struct Body {
 
 impl Body {
 
-    pub fn new(children: Vec<Box<dyn Widget>>, style: Option<Rc<Style>>) -> Self {
+    pub fn new(children: Rc<Vec<Rc<RefCell<dyn Widget>>>>, style: Option<Rc<Style>>) -> Self {
 
         let accepted_style = DefaultStyle::optional_style::<Self>(style);
 
@@ -45,7 +45,7 @@ impl Widget for Body {
                 layout: ColumnLayout {
                     spacing: 5
                 },
-                children: &mut self.children
+                children: self.children.clone()
             };
 
             wrapper.render(&mut self.buf);
@@ -91,8 +91,8 @@ impl Widget for Body {
             self.dirty.clear();
         }
 
-        for child in self.children.iter_mut() {
-            child.update_dirty_state(par_size);
+        for child in self.children.iter() {
+            child.borrow_mut().update_dirty_state(par_size);
         }
 
     }
@@ -103,7 +103,7 @@ impl Widget for Body {
             return true;
         }
         for child in self.children.iter(){
-            if child.is_dirty() {
+            if child.borrow().is_dirty() {
                 return true;
             }
         }

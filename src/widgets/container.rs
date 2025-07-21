@@ -87,14 +87,14 @@ impl Widget for Container {
 
 
         
-        let mut wrapper = Wrapper {
-                layout: ColumnLayout {
-                    spacing: 5
-                },
-                children: &mut self.children
-            };
+        // let mut wrapper = Wrapper {
+        //         layout: ColumnLayout {
+        //             spacing: 5
+        //         },
+        //         children: &mut self.children
+        //     };
 
-        wrapper.render(&mut self.buf);
+        // wrapper.render(&mut self.buf);
 
         self.buf.process(BorderRadius { radius: self.br });
         self.dirty.clear();

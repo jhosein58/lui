@@ -1,6 +1,8 @@
 extern crate lui;
 
 
+use std::rc::Rc;
+
 use lui::*;
 
 fn main () {
@@ -13,14 +15,12 @@ fn main () {
     .height(Size::Absolute(100))
     .get();
 
-    let mut buf = Body::new(vec![
-
+    let mut buf = Body::new( Rc::new(vec![
         Rectangle::new(style.clone()),
         Rectangle::new(style.clone()),
-        Rectangle::new(style.clone()),
+        Rectangle::new(style)
 
-
-    ], None);
+    ]), None);
 
     while sc.is_open() {
         buf.display(&mut sc);

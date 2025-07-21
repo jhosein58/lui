@@ -1,20 +1,25 @@
 
-use crate::{widgets::layout::Layout, GBuf, Widget};
+use std::{cell::RefCell, rc::Rc};
+
+use crate::{widgets::{layout::Layout}, GBuf, Widget};
 
 
-pub struct Wrapper<'a, L: Layout> {
+pub struct Wrapper<L: Layout> {
     pub layout: L,
-    pub children: &'a mut Vec<Box<dyn Widget>>,
+    pub children: Rc<Vec<Rc<RefCell<dyn Widget>>>>,
 }
 
-impl<'a, L: Layout> Wrapper<'a, L> {
+impl<L: Layout> Wrapper<L> {
     pub fn render(&mut self, parent_buffer: &mut GBuf) {
         let parent_size = parent_buffer.size();
-        let positions = self.layout.compute_positions(&self.children, parent_size);
+        let mut positions = self.layout.compute_positions(self.children.clone(), parent_size);
 
-        for (widget, (x, y)) in self.children.iter_mut().zip(positions.iter()) {
-            let child_buf = widget.draw(parent_size);
-            parent_buffer.merge(*x, *y, child_buf);
+        for pe in positions.iter_mut() {
+            if let Some((x, y)) = &pe.position {
+                let mut w = pe.widget.borrow_mut();
+                let child_buf = w.draw(parent_size);
+                parent_buffer.merge(*x, *y, child_buf);
+            }
         }
     }
 }

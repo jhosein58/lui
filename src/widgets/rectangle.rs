@@ -1,4 +1,4 @@
-use std::rc::Rc;
+use std::{cell::RefCell, rc::Rc};
 
 use crate::{widgets::{helpers::default_style::DefaultStyle, props::{dirty::Dirty, style::Style}, Widget}, BorderRadius, DefStyle, GBuf, Size};
 
@@ -16,7 +16,7 @@ pub struct Rectangle {
 
 impl Rectangle {
     
-    pub fn new(style: Option<Rc<Style>>) -> Box<Self> {
+    pub fn new(style: Option<Rc<Style>>) -> Rc<RefCell<Self>> {
 
         let style = DefaultStyle::optional_style::<Self>(style);
 
@@ -25,7 +25,7 @@ impl Rectangle {
         let br = style.get_border_radius().unwrap_or(0);
 
     
-        Box::new(Self { 
+        Rc::new(RefCell::new(Self { 
             buf: GBuf::new(
             0, 
             0, 
@@ -38,7 +38,7 @@ impl Rectangle {
         last_build: None,
         initialized: false,
         style
-    })
+    }))
 
     }
 
