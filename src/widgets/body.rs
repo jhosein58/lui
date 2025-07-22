@@ -1,7 +1,7 @@
 
 use std::{cell::RefCell, rc::Rc};
 
-use crate::{widgets::{helpers::default_style::DefaultStyle, props::dirty::Dirty, DefStyle, Widget}, Color, FallbackLayout, GBuf, PositionLayout, Screen, Style, WrapLayout, Wrapper};
+use crate::{widgets::{helpers::default_style::DefaultStyle, props::dirty::Dirty, DefStyle, Widget}, Color, FallbackLayout, Fps, GBuf, PositionLayout, Style, WrapLayout, Wrapper};
 
 
 pub struct Body {
@@ -9,29 +9,31 @@ pub struct Body {
     children: Rc<Vec<Rc<RefCell<dyn Widget>>>>,
     dirty: Dirty,
     last_build: Option<(usize, usize)>,
-    style: Rc<Style>
+    style: Rc<Style>,
+    fps: Fps
 } 
 
 impl Body {
 
-    pub fn new(children: Rc<Vec<Rc<RefCell<dyn Widget>>>>, style: Option<Rc<Style>>) -> Self {
+    pub fn new(children: Rc<Vec<Rc<RefCell<dyn Widget>>>>, style: Option<Rc<Style>>) -> Rc<RefCell<Self>> {
 
         let accepted_style = DefaultStyle::optional_style::<Self>(style);
 
-        Self { 
+        Rc::new(RefCell::new(
+            Self { 
             buf: GBuf::new(0, 0, accepted_style.most_have_color(0xFFFFFFFF)),
             children,
             dirty: Dirty { is_dirty: true },
             last_build: None,
-            style: accepted_style
+            style: accepted_style,
+            fps: Fps::start()
         }
+        ))
     
     }
 
-    pub fn display(&mut self, sc: &mut Screen) {
-        self.tick();
-        let (buf, _,_ ) = self.draw(sc.size());
-        sc.update(buf);
+    pub fn fps(&self) -> f64{
+        self.fps.read()
     }
 
 }
@@ -124,6 +126,7 @@ impl Widget for Body {
     }
 
     fn tick(&mut self) {
+        self.fps.tick();
         for child in self.children.iter() {
             child.borrow_mut().tick();
         }

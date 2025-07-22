@@ -13,7 +13,7 @@ pub struct Style {
     pub border_radius: Option<usize>,
     pub margin:        Option<DirVal<usize>>,
     pub font_size:     Option<f32>,
-    pub font:          Option<Font>,
+    pub font:          Option<Rc<Font>>,
 }
 
 impl Style {
@@ -128,13 +128,13 @@ impl Style {
         self.font_size
     }
 
-    pub fn font(mut self, f: Font) -> Self {
+    pub fn font(mut self, f: Rc<Font>) -> Self {
         self.font = Some(f);
         self
     }
-    pub fn get_font(&self) -> Option<&Font> {
+    pub fn get_font(&self) -> Option<Rc<Font>> {
         if let Some(f) = &self.font {
-            return Some(&f)
+            return Some(f.clone())
         }
         None
     }

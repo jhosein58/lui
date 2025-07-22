@@ -1,24 +1,20 @@
-extern crate lui;
-
-
 use std::rc::Rc;
 
-use lui::*;
+use lui::{graphics::screen::Screen, *};
 
-fn main () {
+fn main() {
+    
 
-    let mut sc = Screen::new("hello", 300, 300);
+    let style = Style::new()
+     .color(0xFF00FF00)
+    .width(Size::Absolute(50))
+    .height(Size::Absolute(50))
+    .get();
 
-
-    let mut buf = Body::new( Rc::new(vec![
-        Button::new("click!", Style::new().position(Position::center()).get()),
-        
+    let rec = Rectangle::new(style.clone());
+    let buf = Body::new(Rc::new(vec![
+        rec.clone(),       
     ]), None);
 
-
-    while sc.is_open() {
-
-        buf.display(&mut sc);
-    }
-
+    Screen::default().display(buf);
 }

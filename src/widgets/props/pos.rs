@@ -17,4 +17,10 @@ impl Position {
             PosVal::Expr(Box::new(|_: usize,sh,_,ph| (ph - sh) / 2))
         )
     }
+    pub fn absolute(x: usize, y: usize) -> Self{
+        Position::Absolute(
+            PosVal::Absolute(x), 
+            PosVal::Absolute(y)
+        )
+    }
 }

@@ -23,7 +23,7 @@ impl Button {
         let (tw, th) = text.borrow().size();
         let child  = Container::new(Rc::new(vec![
             text
-        ]), Style::new().color(bg).width(Size::Absolute(tw + 35)).height(Size::Absolute(th + 10)).border_radius(br).get());
+        ]), Style::new().color(bg).width(Size::Absolute(tw + 35)).height(Size::Absolute(th + 15)).border_radius(br).get());
 
         Rc::new(RefCell::new(Self { 
             child,
