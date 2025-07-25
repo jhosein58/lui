@@ -39,6 +39,7 @@ pub use widgets::container::Container;
 pub use widgets::rawbuf::RawBuf;
 pub use widgets::text::Text;
 pub use widgets::button::Button;
+pub use widgets::image::Image;
 
 
 pub use monitoring::fps::Fps;

@@ -14,6 +14,7 @@ pub mod container;
 pub mod rawbuf;
 pub mod text;
 pub mod button;
+pub mod image;
 
 pub trait Widget {
     fn size(&self) -> (usize, usize);
