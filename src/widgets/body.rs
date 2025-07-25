@@ -51,7 +51,7 @@ impl Widget for Body {
             let mut wrapper = Wrapper {
                 layout: FallbackLayout {
                     default_layout: WrapLayout {
-                        spacing: 10
+                        spacing: 0
                     },
                     position_layout: PositionLayout {  }
                 },

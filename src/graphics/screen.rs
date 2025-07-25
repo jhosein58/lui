@@ -1,4 +1,4 @@
-use std::{cell::RefCell, rc::Rc, sync::Arc, time::Instant};
+use std::{cell::RefCell, rc::Rc, sync::Arc};
 use pixels::{Pixels, SurfaceTexture};
 use winit::{
     application::ApplicationHandler,
@@ -13,7 +13,6 @@ pub struct Screen {
     window: Option<Arc<Window>>,
     pixels: Option<Pixels<'static>>,
     renderer: Option<Rc<RefCell<Body>>>,
-    time: Instant
 }
 
 impl Default for Screen {
@@ -23,7 +22,6 @@ impl Default for Screen {
             window: None,
             pixels: None,
             renderer: None,
-            time: Instant::now()
         }
     }
 }

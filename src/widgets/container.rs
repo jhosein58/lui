@@ -18,8 +18,12 @@ pub struct Container {
 }
 
 impl Container {
+
+    pub fn new(children: Rc<Vec<Rc<RefCell<dyn Widget>>>>, style: Option<Rc<Style>>) -> Rc<RefCell<Self>> {
+        Rc::new(RefCell::new(Self::new_self(children, style)))
+    }
     
-    pub fn new(children: Rc<Vec<Rc<RefCell<dyn Widget>>>>, style: Option<Rc<Style>>) -> Box<Self> {
+    pub fn new_self(children: Rc<Vec<Rc<RefCell<dyn Widget>>>>, style: Option<Rc<Style>>) -> Self {
 
         let style = DefaultStyle::optional_style::<Self>(style);
 
@@ -41,7 +45,8 @@ impl Container {
             buf_h = 0;
         }
     
-        Box::new(Self { 
+        
+        Self { 
             children,
             buf: GBuf::new(buf_w, buf_h, style.get_color().unwrap_or(0),) , 
             dirty: Dirty { is_dirty: true },
@@ -51,7 +56,7 @@ impl Container {
             last_build: None,
             initialized: false,
             style
-        })
+        }
     }
 
     fn init_build_if_need(&mut self, par_size: (usize, usize)) {
@@ -93,7 +98,7 @@ impl Widget for Container {
         let mut wrapper = Wrapper {
                 layout: FallbackLayout {
                     default_layout: WrapLayout {
-                        spacing: 10
+                        spacing: 0
                     },
                     position_layout: PositionLayout { }
                 },
